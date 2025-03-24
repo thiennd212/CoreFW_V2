@@ -2,7 +2,7 @@
 
 ## About this solution
 
-This is a layered startup solution based on [Domain Driven Design (DDD)](https://abp.io/docs/latest/framework/architecture/domain-driven-design) practises. All the fundamental ABP modules are already installed. 
+This is a layered startup solution based on [Domain Driven Design (DDD)](https://abp.io/docs/8.3/framework/architecture/domain-driven-design) practises. All the fundamental ABP modules are already installed. 
 
 ### Pre-requirements
 
@@ -33,7 +33,7 @@ It is recommended to use **two** RSA certificates, distinct from the certificate
 
 For more information, please refer to: https://documentation.openiddict.com/configuration/encryption-and-signing-credentials.html#registering-a-certificate-recommended-for-production-ready-scenarios
 
-> Also, see the [Configuring OpenIddict](https://abp.io/docs/latest/deployment/configuring-openiddict#production-environment) documentation for more information.
+> Also, see the [Configuring OpenIddict](https://abp.io/docs/8.3/deployment/configuring-openiddict) documentation for more information.
 
 #### Install Client-Side Libraries
 
@@ -58,12 +58,12 @@ This is a layered monolith application that consists of the following applicatio
 
 ### Deploying the application
 
-Deploying an ABP application is not different than deploying any .NET or ASP.NET Core application. However, there are some topics that you should care about when you are deploying your applications. You can check ABP's [Deployment documentation](https://abp.io/docs/latest/deployment) before deploying your application.
+Deploying an ABP application is not different than deploying any .NET or ASP.NET Core application. However, there are some topics that you should care about when you are deploying your applications. You can check ABP's [Deployment documentation](https://abp.io/docs/8.3/deployment) before deploying your application.
 
 ### Additional resources
 
 You can see the following resources to learn more about your solution and the ABP Framework:
 
-* [Web Application Development Tutorial](https://abp.io/docs/latest/tutorials/book-store/part-01?UI=Blazor&DB=EF)
-* [Application Startup Template Structure](https://abp.io/docs/latest/solution-templates/layered-web-application)
-* [LeptonX Lite Blazor UI](https://abp.io/docs/latest/ui-themes/lepton-x-lite/blazor?UI=BlazorServer)
+* [Web Application Development Tutorial](https://abp.io/docs/8.3/tutorials/book-store/part-01?UI=BlazorServer&DB=EF)
+* [Application Startup Template Structure](https://abp.io/docs/8.3/solution-templates/layered-web-application)
+* [LeptonX Lite Blazor UI](https://abp.io/docs/8.3/ui-themes/lepton-x-lite/blazor?UI=BlazorServer)
