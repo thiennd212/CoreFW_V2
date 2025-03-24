@@ -44,6 +44,7 @@ using Volo.Abp.UI;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using DevExpress.Blazor;
 
 namespace CoreFW.Blazor;
 
@@ -117,6 +118,8 @@ public class CoreFWBlazorModule : AbpModule
         // Add services to the container.
         context.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
+        // Add devexpress blazor
+        context.Services.AddDevExpressBlazor(configure => configure.BootstrapVersion = BootstrapVersion.v5);
 
         ConfigureAuthentication(context);
         ConfigureUrls(configuration);

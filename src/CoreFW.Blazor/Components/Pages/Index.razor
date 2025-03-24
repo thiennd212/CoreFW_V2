@@ -2,6 +2,31 @@
 @using Volo.Abp.MultiTenancy
 @inherits CoreFWComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@rendermode InteractiveServer
+
+<DxGrid Data="@employees" PageSize="5">
+    <Columns>
+        <DxGridDataColumn FieldName="@nameof(Employee.Id)" Caption="ID" />
+        <DxGridDataColumn FieldName="@nameof(Employee.Name)" Caption="Name" />
+        <DxGridDataColumn FieldName="@nameof(Employee.Position)" Caption="Position" />
+    </Columns>
+</DxGrid>
+
+@code {
+    List<Employee> employees = new()
+    {
+        new Employee { Id = 1, Name = "John Doe", Position = "Manager" },
+        new Employee { Id = 2, Name = "Jane Smith", Position = "Developer" },
+        new Employee { Id = 3, Name = "Sam Brown", Position = "Designer" }
+    };
+
+    public class Employee
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Position { get; set; }
+    }
+}
 
 <div class="row mb-3">
     <div class="col-xl-6 col-12 d-flex">

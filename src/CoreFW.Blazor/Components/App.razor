@@ -16,11 +16,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CoreFW.Blazor</title>
     <base href="/" />
-
+    <link href=@AppendVersion("_content/DevExpress.Blazor.Themes/blazing-berry.bs5.min.css") rel="stylesheet" />
     <AbpStyles BundleName="@BlazorLeptonXLiteThemeBundles.Styles.Global" />
-
     <HeadOutlet @rendermode="InteractiveServer" />
-
+    @DxResourceManager.RegisterScripts()
 </head>
 <body>
 
@@ -45,3 +44,6 @@
 
 </body>
 </html>
+@code {
+    private string AppendVersion(string path) => $"{path}?v={typeof(DevExpress.Blazor.ResourcesConfigurator).Assembly.GetName().Version}";
+}
