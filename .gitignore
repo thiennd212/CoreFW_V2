@@ -264,3 +264,4 @@ src/CoreFW.Blazor.Tiered/Logs/*
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
 /project-sumary.md
+/CoreFramework-Requiment.txt
