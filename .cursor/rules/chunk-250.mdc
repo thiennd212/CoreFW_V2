@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Keep source code files under 250 lines
+
+- Keep source code files under 250 lines.
+- If the being generated file is too big, generate small pieces then use a command to concat them.
