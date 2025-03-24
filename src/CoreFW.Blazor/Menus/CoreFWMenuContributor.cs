@@ -10,12 +10,11 @@ namespace CoreFW.Blazor.Menus;
 
 public class CoreFWMenuContributor : IMenuContributor
 {
-    public async Task ConfigureMenuAsync(MenuConfigurationContext context)
+    public Task ConfigureMenuAsync(MenuConfigurationContext context)
     {
-        if (context.Menu.Name == StandardMenus.Main)
-        {
-            await ConfigureMainMenuAsync(context);
-        }
+        return context.Menu.Name == StandardMenus.Main 
+            ? ConfigureMainMenuAsync(context) 
+            : Task.CompletedTask;
     }
 
     private Task ConfigureMainMenuAsync(MenuConfigurationContext context)
@@ -31,6 +30,17 @@ public class CoreFWMenuContributor : IMenuContributor
                 "/",
                 icon: "fas fa-home",
                 order: 0
+            )
+        );
+
+        context.Menu.Items.Insert(
+            1,
+            new ApplicationMenuItem(
+                "DxGridDemo",
+                "Demo DxGrid",
+                "/dx-grid-demo",
+                icon: "fas fa-table",
+                order: 1
             )
         );
 
