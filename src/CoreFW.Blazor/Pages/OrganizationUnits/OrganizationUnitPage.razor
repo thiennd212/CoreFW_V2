@@ -1,0 +1,121 @@
+@page "/organization-units"
+@using CoreFW.OrganizationUnits
+@using CoreFW.OrganizationUnits.Dtos
+@using Volo.Abp.Identity
+@using Volo.Abp.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using Volo.Abp.BlazoriseUI
+@using Blazorise
+@inherits AbpComponentBase
+@inject IOrganizationUnitAppService OrganizationUnitAppService
+
+<PageHeader Title="Organization Units"
+           BreadcrumbItems="@BreadcrumbItems">
+</PageHeader>
+
+@if (OrganizationUnits != null)
+{
+    <Card>
+        <CardHeader>
+            <Row Class="justify-content-between">
+                <Column ColumnSize="ColumnSize.IsAuto">
+                    <h2>Organization Units</h2>
+                </Column>
+                <Column ColumnSize="ColumnSize.IsAuto">
+                    @if (CanCreateOU)
+                    {
+                        <Button Color="Color.Primary" Clicked="OpenCreateOUModal">
+                            <Icon Name="IconName.Add" />
+                            Add Organization Unit
+                        </Button>
+                    }
+                </Column>
+            </Row>
+        </CardHeader>
+        <CardBody>
+            <OrganizationUnitTree @ref="TreeComponent"
+                                 OrganizationUnits="OrganizationUnits"
+                                 OnCreateChild="OpenCreateChildOUModal"
+                                 OnEdit="OpenEditOUModal"
+                                 OnDelete="DeleteOUAsync" />
+        </CardBody>
+    </Card>
+}
+
+<CreateUpdateOrganizationUnitModal @ref="CreateUpdateOUModal" />
+
+@code {
+    protected List<Volo.Abp.BlazoriseUI.BreadcrumbItem> BreadcrumbItems { get; } = new();
+    private List<OrganizationUnitDto> OrganizationUnits { get; set; }
+    private OrganizationUnitTree? TreeComponent { get; set; }
+    private CreateUpdateOrganizationUnitModal? CreateUpdateOUModal { get; set; }
+    private bool CanCreateOU { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SetPermissionsAsync();
+        await GetOrganizationUnitsAsync();
+        SetBreadcrumbItems();
+    }
+
+    private void SetBreadcrumbItems()
+    {
+        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem("Identity Management", "/identity"));
+        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem("Organization Units"));
+    }
+
+    private async Task SetPermissionsAsync()
+    {
+        CanCreateOU = await AuthorizationService
+            .IsGrantedAsync(IdentityPermissions.Users.Create);
+    }
+
+    private async Task GetOrganizationUnitsAsync()
+    {
+        OrganizationUnits = await OrganizationUnitAppService.GetListAsync();
+        StateHasChanged();
+    }
+
+    private async Task OpenCreateOUModal()
+    {
+        if (CreateUpdateOUModal != null)
+        {
+            await CreateUpdateOUModal.OpenForCreateAsync();
+            await GetOrganizationUnitsAsync();
+        }
+    }
+
+    private async Task OpenCreateChildOUModal(OrganizationUnitDto parent)
+    {
+        if (CreateUpdateOUModal != null)
+        {
+            await CreateUpdateOUModal.OpenForCreateAsync(parent.Id);
+            await GetOrganizationUnitsAsync();
+        }
+    }
+
+    private async Task OpenEditOUModal(OrganizationUnitDto organizationUnit)
+    {
+        if (CreateUpdateOUModal != null)
+        {
+            await CreateUpdateOUModal.OpenForUpdateAsync(organizationUnit);
+            await GetOrganizationUnitsAsync();
+        }
+    }
+
+    private async Task DeleteOUAsync(OrganizationUnitDto organizationUnit)
+    {
+        var confirmed = await Message.Confirm(
+            L["OrganizationUnitDeletionConfirmationMessage", organizationUnit.DisplayName],
+            L["Warning"]
+        );
+
+        if (confirmed)
+        {
+            await OrganizationUnitAppService.DeleteAsync(organizationUnit.Id);
+            await GetOrganizationUnitsAsync();
+            await Notify.Success(L["SuccessfullyDeleted"]);
+        }
+    }
+} 

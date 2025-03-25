@@ -1,0 +1,82 @@
+﻿@typeparam TItem
+@using DevExpress.Blazor
+
+@if (EnableExport)
+{
+    <div class="mt-2">
+        <DxButton Text="Export XLSX" Click="ExportXlsx_Click" />
+        <DxButton Text="Export XLS" Click="ExportXls_Click" />
+        <DxButton Text="Export CSV" Click="ExportCsv_Click" />
+    </div>
+}
+<DxGrid @ref="Grid"
+        Data="@Data" 
+        PageSize="@PageSize"
+        PagerVisible="@EnablePaging"
+        AllowSort="@EnableSorting"
+        ShowFilterRow="@EnableFiltering">
+    <Columns>
+        @foreach (var column in Columns)
+        {
+            <DxGridDataColumn FieldName="@column.FieldName" 
+                             Caption="@column.Caption"
+                             AllowSort="@EnableSorting"/>
+        }
+    </Columns>
+</DxGrid>
+
+@code {
+    private DxGrid Grid { get; set; }
+
+    [Parameter] public List<TItem> Data { get; set; } = new();
+    [Parameter] public int PageSize { get; set; } = 10;
+    [Parameter] public List<GridColumnDefinition> Columns { get; set; } = new();
+    [Parameter] public bool EnablePaging { get; set; } = true;
+    [Parameter] public bool EnableSorting { get; set; } = true;
+    [Parameter] public bool EnableFiltering { get; set; } = true;
+    [Parameter] public bool EnableExport { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        InitData();
+    }
+
+    private void InitData()
+    {
+        // Kiểm tra nếu Data rỗng thì gán danh sách mặc định (tránh lỗi)
+        if (Data == null)
+        {
+            Data = new List<TItem>();
+        }
+
+        // Kiểm tra nếu Columns rỗng thì tự động lấy các property từ TItem
+        if (Columns == null || Columns.Count == 0)
+        {
+            Columns = typeof(TItem).GetProperties()
+                .Select(p => new GridColumnDefinition { FieldName = p.Name, Caption = p.Name })
+                .ToList();
+        }
+    }
+
+    private async Task ExportXlsx_Click()
+    {
+        await Grid.ExportToXlsxAsync("ExportResult");
+    }
+
+    private async Task ExportXls_Click()
+    {
+        await Grid.ExportToXlsAsync("ExportResult");
+    }
+
+    private async Task ExportCsv_Click()
+    {
+        await Grid.ExportToCsvAsync("ExportResult");
+    }
+
+    public class GridColumnDefinition
+    {
+        public string FieldName { get; set; } = string.Empty;
+        public string Caption { get; set; } = string.Empty;
+    }
+}

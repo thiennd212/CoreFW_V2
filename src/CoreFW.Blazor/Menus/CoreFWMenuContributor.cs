@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using CoreFW.Localization;
 using CoreFW.MultiTenancy;
+using Volo.Abp.Identity;
 using Volo.Abp.Identity.Blazor;
 using Volo.Abp.SettingManagement.Blazor.Menus;
 using Volo.Abp.TenantManagement.Blazor.Navigation;
@@ -10,11 +11,12 @@ namespace CoreFW.Blazor.Menus;
 
 public class CoreFWMenuContributor : IMenuContributor
 {
-    public Task ConfigureMenuAsync(MenuConfigurationContext context)
+    public async Task ConfigureMenuAsync(MenuConfigurationContext context)
     {
-        return context.Menu.Name == StandardMenus.Main 
-            ? ConfigureMainMenuAsync(context) 
-            : Task.CompletedTask;
+        if (context.Menu.Name == StandardMenus.Main)
+        {
+            await ConfigureMainMenuAsync(context);
+        }
     }
 
     private Task ConfigureMainMenuAsync(MenuConfigurationContext context)
@@ -55,6 +57,18 @@ public class CoreFWMenuContributor : IMenuContributor
 
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
         administration.SetSubItemOrder(SettingManagementMenus.GroupName, 3);
+
+        // Add Organization Units menu item
+        administration.AddItem(
+            new ApplicationMenuItem(
+                "CoreFW.OrganizationUnits",
+                l["Menu:OrganizationUnits"],
+                url: "/organization-units",
+                icon: "fas fa-sitemap",
+                order: 2,
+                requiredPermissionName: IdentityPermissions.Users.Default
+            )
+        );
 
         return Task.CompletedTask;
     }

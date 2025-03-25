@@ -1,0 +1,110 @@
+@using CoreFW.OrganizationUnits
+@using CoreFW.OrganizationUnits.Dtos
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components
+@inherits AbpComponentBase
+@inject IOrganizationUnitAppService OrganizationUnitAppService
+@inject NavigationManager NavigationManager
+
+<Modal @ref="Modal">
+    <ModalContent Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>@(IsEditMode ? L["EditOrganizationUnit"] : L["CreateNewOrganizationUnit"])</ModalTitle>
+            <CloseButton Clicked="CloseModal" />
+        </ModalHeader>
+        <ModalBody>
+            <EditForm Model="@ViewModel" OnValidSubmit="SaveAsync">
+                <DataAnnotationsValidator />
+                <Blazorise.ValidationSummary />
+
+                <Field>
+                    <FieldLabel>@L["DisplayName"]</FieldLabel>
+                    <TextEdit @bind-Text="@ViewModel.DisplayName" />
+                    <ValidationMessage For="@(() => ViewModel.DisplayName)" />
+                </Field>
+            </EditForm>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="CloseModal">@L["Cancel"]</Button>
+            <Button Color="Color.Primary" Clicked="SaveAsync">@L["Save"]</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    private Modal? Modal { get; set; }
+    private bool IsEditMode => EditingOUId.HasValue;
+    private Guid? EditingOUId { get; set; }
+    private Guid? ParentId { get; set; }
+    private CreateOrganizationUnitDto ViewModel { get; set; } = new();
+
+    public async Task OpenForCreateAsync(Guid? parentId = null)
+    {
+        EditingOUId = null;
+        ParentId = parentId;
+        ViewModel = new CreateOrganizationUnitDto
+        {
+            ParentId = parentId
+        };
+
+        await InvokeAsync(StateHasChanged);
+        if (Modal != null)
+        {
+            await Modal.Show();
+        }
+    }
+
+    public async Task OpenForUpdateAsync(OrganizationUnitDto organizationUnit)
+    {
+        EditingOUId = organizationUnit.Id;
+        ViewModel = new CreateOrganizationUnitDto
+        {
+            DisplayName = organizationUnit.DisplayName
+        };
+
+        await InvokeAsync(StateHasChanged);
+        if (Modal != null)
+        {
+            await Modal.Show();
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        try
+        {
+            if (IsEditMode)
+            {
+                await OrganizationUnitAppService.UpdateAsync(
+                    EditingOUId.Value,
+                    new UpdateOrganizationUnitDto
+                    {
+                        DisplayName = ViewModel.DisplayName
+                    }
+                );
+
+                await Notify.Success(L["SuccessfullyUpdated"]);
+            }
+            else
+            {
+                await OrganizationUnitAppService.CreateAsync(ViewModel);
+                await Notify.Success(L["SuccessfullyCreated"]);
+            }
+
+            if (Modal != null)
+            {
+                await Modal.Hide();
+            }
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        }
+        catch (Exception ex)
+        {
+            await HandleErrorAsync(ex);
+        }
+    }
+
+    private Task CloseModal()
+    {
+        return Modal?.Hide() ?? Task.CompletedTask;
+    }
+} 

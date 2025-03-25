@@ -1,0 +1,79 @@
+@using CoreFW.OrganizationUnits.Dtos
+@using DevExpress.Blazor
+@using DevExpress.Blazor.Base
+@using Volo.Abp.Identity
+@using Volo.Abp.AspNetCore.Components
+@inherits AbpComponentBase
+
+<DxTreeView Data="@OrganizationUnits"
+           CssClass="organization-unit-tree"
+           ShowExpandButtons="true"
+           AllowSelectNodes="true">
+    <DataMappings>
+        <DxTreeViewDataMapping 
+            Text="@nameof(OrganizationUnitDto.DisplayName)"
+            Key="@nameof(OrganizationUnitDto.Id)"
+            ParentKey="@nameof(OrganizationUnitDto.ParentId)" />
+    </DataMappings>
+    <NodeTemplate>
+        <div class="d-flex align-items-center">
+            <i class="fas fa-sitemap me-2"></i>
+            <span>@((context.DataItem as OrganizationUnitDto)?.DisplayName)</span>
+            <div class="ml-auto">
+                @if (CanCreateOU)
+                {
+                    <DxButton IconCssClass="fas fa-plus"
+                             RenderStyle="ButtonRenderStyle.Light"
+                             Click="() => OnCreateChild.InvokeAsync(context.DataItem as OrganizationUnitDto)" />
+                }
+                @if (CanUpdateOU)
+                {
+                    <DxButton IconCssClass="fas fa-edit"
+                             RenderStyle="ButtonRenderStyle.Light"
+                             Click="() => OnEdit.InvokeAsync(context.DataItem as OrganizationUnitDto)" />
+                }
+                @if (CanDeleteOU)
+                {
+                    <DxButton IconCssClass="fas fa-trash"
+                             RenderStyle="ButtonRenderStyle.Light"
+                             Click="() => OnDelete.InvokeAsync(context.DataItem as OrganizationUnitDto)" />
+                }
+            </div>
+        </div>
+    </NodeTemplate>
+</DxTreeView>
+
+@code {
+    [Parameter]
+    public List<OrganizationUnitDto> OrganizationUnits { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<OrganizationUnitDto> OnCreateChild { get; set; }
+
+    [Parameter]
+    public EventCallback<OrganizationUnitDto> OnEdit { get; set; }
+
+    [Parameter]
+    public EventCallback<OrganizationUnitDto> OnDelete { get; set; }
+
+    private bool CanCreateOU { get; set; }
+    private bool CanUpdateOU { get; set; }
+    private bool CanDeleteOU { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SetPermissionsAsync();
+    }
+
+    private async Task SetPermissionsAsync()
+    {
+        CanCreateOU = await AuthorizationService
+            .IsGrantedAsync(IdentityPermissions.Users.Create);
+
+        CanUpdateOU = await AuthorizationService
+            .IsGrantedAsync(IdentityPermissions.Users.Update);
+
+        CanDeleteOU = await AuthorizationService
+            .IsGrantedAsync(IdentityPermissions.Users.Delete);
+    }
+} 

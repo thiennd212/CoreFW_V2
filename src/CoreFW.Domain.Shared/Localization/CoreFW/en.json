@@ -4,6 +4,17 @@
     "AppName": "CoreFW",
     "Menu:Home": "Home",
     "Welcome": "Welcome",
-    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io."
+    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
+    "Menu:OrganizationUnits": "Organization Units",
+    "OrganizationUnit": "Organization Unit",
+    "OrganizationUnitDeletionConfirmationMessage": "Are you sure to delete organization unit {0}?",
+    "CreateNewOrganizationUnit": "Create new organization unit",
+    "EditOrganizationUnit": "Edit organization unit",
+    "DisplayName": "Display Name",
+    "Cancel": "Cancel",
+    "Save": "Save",
+    "SuccessfullyCreated": "Successfully created",
+    "SuccessfullyUpdated": "Successfully updated",
+    "SuccessfullyDeleted": "Successfully deleted"
   }
 }

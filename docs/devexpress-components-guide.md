@@ -16,21 +16,17 @@
 ```
 src/CoreFW.Blazor/
 ├── Components/
-│   ├── DevExpress/
-│   │   ├── Base/
-│   │   │   ├── DxGridBase.razor
-│   │   │   ├── DxFormBase.razor
-│   │   │   ├── DxTreeViewBase.razor
-│   │   │   └── DxTabControlBase.razor
-│   │   ├── Layouts/
-│   │   │   ├── DxFormLayoutBase.razor
-│   │   │   └── DxPageLayoutBase.razor
-│   │   └── Controls/
-│   │       ├── DxInputBase.razor
-│   │       └── DxValidationBase.razor
-│   └── Common/
-│       ├── DxLoadingIndicator.razor
-│       └── DxErrorBoundary.razor
+│   ├── Shared/
+│   │   ├── DxGridComponent.razor
+│   │   ├── DxFormComponent.razor
+│   │   ├── DxTreeViewComponent.razor
+│   │   └── DxTabControlComponent.razor
+│   ├── Layouts/
+│   │   ├── DxFormLayoutComponent.razor
+│   │   └── DxPageLayoutComponent.razor
+│   └── Controls/
+│       ├── DxInputComponent.razor
+│       └── DxValidationComponent.razor
 ```
 
 ### 1.2 Using Statements Cơ bản
@@ -45,44 +41,44 @@ src/CoreFW.Blazor/
 ## 2. Các Bước Triển khai
 
 ### 2.1 Giai đoạn 1: Grid và Form
-1. **DxGridBase.razor**
+1. **DxGridComponent.razor**
    - Implement grid features
    - Add events handlers
    - Configure default settings
 
-2. **DxFormBase.razor**
+2. **DxFormComponent.razor**
    - Implement form layout
    - Add validation
    - Configure auto save
 
-3. **DxFormLayoutBase.razor**
+3. **DxFormLayoutComponent.razor**
    - Implement layout structure
    - Add responsive design
    - Configure styling
 
 ### 2.2 Giai đoạn 2: TreeView và TabControl
-1. **DxTreeViewBase.razor**
+1. **DxTreeViewComponent.razor**
    - Implement tree structure
    - Add drag & drop
    - Configure context menu
 
-2. **DxTabControlBase.razor**
+2. **DxTabControlComponent.razor**
    - Implement tab control
    - Add drag & drop
    - Configure tab position
 
-3. **DxPageLayoutBase.razor**
+3. **DxPageLayoutComponent.razor**
    - Implement page layout
    - Add responsive design
    - Configure navigation
 
 ### 2.3 Giai đoạn 3: Controls và Common
-1. **DxInputBase.razor**
+1. **DxInputComponent.razor**
    - Implement input controls
    - Add validation
    - Configure styling
 
-2. **DxValidationBase.razor**
+2. **DxValidationComponent.razor**
    - Implement validation logic
    - Add error messages
    - Configure validation rules
@@ -99,9 +95,9 @@ src/CoreFW.Blazor/
 
 ## 3. Chi tiết Components
 
-### 3.1 DxGridBase.razor
+### 3.1 DxGridComponent.razor
 ```csharp
-@inherits DxGridBase
+@inherits DxGridComponent
 @using DevExpress.Blazor
 @using DevExpress.Blazor.Grid
 
@@ -166,9 +162,9 @@ src/CoreFW.Blazor/
 }
 ```
 
-### 3.2 DxFormBase.razor
+### 3.2 DxFormComponent.razor
 ```csharp
-@inherits DxFormBase
+@inherits DxFormComponent
 @using DevExpress.Blazor
 @using DevExpress.Blazor.Form
 
@@ -212,9 +208,9 @@ src/CoreFW.Blazor/
 }
 ```
 
-### 3.3 DxTreeViewBase.razor
+### 3.3 DxTreeViewComponent.razor
 ```csharp
-@inherits DxTreeViewBase
+@inherits DxTreeViewComponent
 @using DevExpress.Blazor
 @using DevExpress.Blazor.TreeView
 
@@ -248,9 +244,9 @@ src/CoreFW.Blazor/
 }
 ```
 
-### 3.4 DxTabControlBase.razor
+### 3.4 DxTabControlComponent.razor
 ```csharp
-@inherits DxTabControlBase
+@inherits DxTabControlComponent
 @using DevExpress.Blazor
 @using DevExpress.Blazor.TabControl
 
@@ -285,9 +281,9 @@ src/CoreFW.Blazor/
 
 ## 4. Cách Sử dụng
 
-### 4.1 Sử dụng DxGridBase
+### 4.1 Sử dụng DxGridComponent
 ```razor
-<DxGridBase T="UserDto"
+<DxGridComponent T="UserDto"
             Data="@Users"
             EnablePaging="true"
             EnableSorting="true"
@@ -315,12 +311,12 @@ src/CoreFW.Blazor/
                          AllowSort="true"
                          AllowFilter="true" />
     </Columns>
-</DxGridBase>
+</DxGridComponent>
 ```
 
-### 4.2 Sử dụng DxFormBase
+### 4.2 Sử dụng DxFormComponent
 ```razor
-<DxFormBase EnableValidation="true"
+<DxFormComponent EnableValidation="true"
             EnableAutoSave="true"
             ValidationMode="ValidationMode.Auto"
             OnSubmit="@HandleSubmit">
@@ -332,14 +328,14 @@ src/CoreFW.Blazor/
                       ValidationMode="ValidationMode.Auto" />
         </DxFormLayoutGroup>
     </DxFormLayout>
-</DxFormBase>
+</DxFormComponent>
 ```
 
 ## 5. Best Practices
 
 ### 5.1 Naming Conventions
 - Sử dụng prefix "Dx" cho tất cả components
-- Thêm suffix "Base" cho base components
+- Thêm suffix "Component" cho tất cả components
 - Sử dụng PascalCase cho tên file và class
 - Đặt tên parameters theo quy tắc của DevExpress
 
@@ -365,13 +361,13 @@ src/CoreFW.Blazor/
 
 ### 6.1 Unit Tests
 ```csharp
-public class DxGridBaseTests
+public class DxGridComponentTests
 {
     [Fact]
     public void ConfigureDefaultSettings_ShouldSetCorrectValues()
     {
         // Arrange
-        var grid = new DxGridBase();
+        var grid = new DxGridComponent();
 
         // Act
         grid.ConfigureDefaultSettings();
@@ -386,13 +382,13 @@ public class DxGridBaseTests
 
 ### 6.2 Integration Tests
 ```csharp
-public class DxFormBaseIntegrationTests
+public class DxFormComponentIntegrationTests
 {
     [Fact]
     public async Task FormSubmit_ShouldTriggerCallback()
     {
         // Arrange
-        var form = new DxFormBase();
+        var form = new DxFormComponent();
         var callbackTriggered = false;
         form.OnSubmit = new EventCallback<FormData>(null, (data) => callbackTriggered = true);
 
@@ -410,10 +406,10 @@ public class DxFormBaseIntegrationTests
 ### 7.1 XML Documentation
 ```csharp
 /// <summary>
-/// DevExpress Grid base component with common configurations
+/// DevExpress Grid component with common configurations
 /// </summary>
 /// <typeparam name="T">Type of data items</typeparam>
-public class DxGridBase<T> : DxGridBase
+public class DxGridComponent<T> : DxGridComponent
 {
     /// <summary>
     /// Gets or sets whether DevExpress Grid paging is enabled
@@ -425,8 +421,8 @@ public class DxGridBase<T> : DxGridBase
 
 ### 7.2 Usage Examples
 ```razor
-@* Example usage of DevExpress Grid Base Component *@
-<DxGridBase T="ProductDto"
+@* Example usage of DevExpress Grid Component *@
+<DxGridComponent T="ProductDto"
             Data="@Products"
             EnablePaging="true"
             EnableSorting="true"
@@ -446,7 +442,7 @@ public class DxGridBase<T> : DxGridBase
                          AllowSort="true"
                          AllowFilter="true" />
     </Columns>
-</DxGridBase>
+</DxGridComponent>
 ```
 
 ## 8. Quy trình Review và Kiểm thử

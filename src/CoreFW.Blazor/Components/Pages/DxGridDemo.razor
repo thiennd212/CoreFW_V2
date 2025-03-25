@@ -1,0 +1,43 @@
+@page "/dx-grid-demo"
+@using CoreFW.Blazor.Components.Shared
+@using DevExpress.Blazor
+
+<h1>DxGrid Demo</h1>
+
+<div class="mb-3">
+    <h3>Grid với Paging, Sorting, Filtering và Export</h3>
+    <DxGridComponent Data="employees" 
+                     PageSize="5" 
+                     Columns="employeeColumns"
+                     EnablePaging="true"
+                     EnableSorting="true"
+                     EnableFiltering="true"
+                     EnableExport="true" />
+</div>
+@code {
+    List<Employee> employees = new()
+    {
+        new Employee { Id = 1, Name = "John Doe", Position = "Manager" },
+        new Employee { Id = 2, Name = "Jane Smith", Position = "Developer" },
+        new Employee { Id = 3, Name = "Alice Brown", Position = "Designer" },
+        new Employee { Id = 4, Name = "Bob Wilson", Position = "Tester" },
+        new Employee { Id = 5, Name = "Carol Davis", Position = "Analyst" },
+        new Employee { Id = 6, Name = "David Miller", Position = "Developer" },
+        new Employee { Id = 7, Name = "Eva Anderson", Position = "Designer" },
+        new Employee { Id = 8, Name = "Frank Taylor", Position = "Manager" }
+    };
+
+    List<DxGridComponent<Employee>.GridColumnDefinition> employeeColumns = new()
+    {
+        new() { FieldName = nameof(Employee.Id), Caption = "ID" },
+        new() { FieldName = nameof(Employee.Name), Caption = "Name" },
+        new() { FieldName = nameof(Employee.Position), Caption = "Position" }
+    };
+
+    public class Employee
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Position { get; set; }
+    }
+}
