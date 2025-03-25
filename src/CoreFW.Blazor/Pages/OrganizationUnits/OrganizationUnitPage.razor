@@ -11,7 +11,7 @@
 @inject IOrganizationUnitAppService OrganizationUnitAppService
 
 <PageHeader Title="Organization Units"
-           BreadcrumbItems="@BreadcrumbItems">
+BreadcrumbItems="@BreadcrumbItems">
 </PageHeader>
 
 @if (OrganizationUnits != null)
@@ -35,10 +35,10 @@
         </CardHeader>
         <CardBody>
             <OrganizationUnitTree @ref="TreeComponent"
-                                 OrganizationUnits="OrganizationUnits"
-                                 OnCreateChild="OpenCreateChildOUModal"
-                                 OnEdit="OpenEditOUModal"
-                                 OnDelete="DeleteOUAsync" />
+            OrganizationUnits="OrganizationUnits"
+            OnCreateChild="OpenCreateChildOUModal"
+            OnEdit="OpenEditOUModal"
+            OnDelete="DeleteOUAsync" />
         </CardBody>
     </Card>
 }
@@ -57,11 +57,23 @@
         await SetPermissionsAsync();
         await GetOrganizationUnitsAsync();
         SetBreadcrumbItems();
+        
+        if (TreeComponent?.orgTreeView != null)
+        {
+            TreeComponent.orgTreeView.ExpandAll();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && TreeComponent?.orgTreeView != null)
+        {
+            TreeComponent.orgTreeView.ExpandAll();
+        }
     }
 
     private void SetBreadcrumbItems()
     {
-        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem("Identity Management", "/identity"));
         BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem("Organization Units"));
     }
 

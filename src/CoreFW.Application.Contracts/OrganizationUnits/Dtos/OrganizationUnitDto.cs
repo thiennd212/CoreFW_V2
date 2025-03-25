@@ -9,4 +9,6 @@ public class OrganizationUnitDto : FullAuditedEntityDto<Guid>
     public string Code { get; set; }
     public string DisplayName { get; set; }
     public int Level { get; set; }
+    public bool IsExpanded { get; set; }
+    public int MemberCount { get; set; }
 } 

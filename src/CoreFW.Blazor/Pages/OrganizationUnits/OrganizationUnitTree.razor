@@ -5,43 +5,141 @@
 @using Volo.Abp.AspNetCore.Components
 @inherits AbpComponentBase
 
-<DxTreeView Data="@OrganizationUnits"
+<DxTreeView @ref="@orgTreeView" 
+           Data="@OrganizationUnits"
            CssClass="organization-unit-tree"
-           ShowExpandButtons="true"
            AllowSelectNodes="true">
     <DataMappings>
         <DxTreeViewDataMapping 
             Text="@nameof(OrganizationUnitDto.DisplayName)"
             Key="@nameof(OrganizationUnitDto.Id)"
-            ParentKey="@nameof(OrganizationUnitDto.ParentId)" />
+            ParentKey="@nameof(OrganizationUnitDto.ParentId)"/>
     </DataMappings>
     <NodeTemplate>
-        <div class="d-flex align-items-center">
-            <i class="fas fa-sitemap me-2"></i>
-            <span>@((context.DataItem as OrganizationUnitDto)?.DisplayName)</span>
-            <div class="ml-auto">
-                @if (CanCreateOU)
-                {
-                    <DxButton IconCssClass="fas fa-plus"
-                             RenderStyle="ButtonRenderStyle.Light"
-                             Click="() => OnCreateChild.InvokeAsync(context.DataItem as OrganizationUnitDto)" />
-                }
-                @if (CanUpdateOU)
-                {
-                    <DxButton IconCssClass="fas fa-edit"
-                             RenderStyle="ButtonRenderStyle.Light"
-                             Click="() => OnEdit.InvokeAsync(context.DataItem as OrganizationUnitDto)" />
-                }
-                @if (CanDeleteOU)
-                {
-                    <DxButton IconCssClass="fas fa-trash"
-                             RenderStyle="ButtonRenderStyle.Light"
-                             Click="() => OnDelete.InvokeAsync(context.DataItem as OrganizationUnitDto)" />
-                }
+        <div class="node-wrapper">
+            @{
+                var ou = context.DataItem as OrganizationUnitDto;
+                var hasChildren = OrganizationUnits.Any(x => x.ParentId == ou.Id);
+            }
+            <div class="node-content">
+                <div class="node-left">
+                    <i class="fas @(hasChildren ? "fa-folder" : "fa-file") text-warning"></i>
+                    <div class="node-info">
+                        <div class="node-title">
+                            <span class="node-name">@ou?.DisplayName</span>
+                            <span class="member-count">(@(ou?.MemberCount ?? 0) Thành viên)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="node-actions">
+                    @if (CanCreateOU)
+                    {
+                        <button class="btn btn-icon" @onclick="() => OnCreateChild.InvokeAsync(ou)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    }
+                    @if (CanUpdateOU)
+                    {
+                        <button class="btn btn-icon" @onclick="() => OnEdit.InvokeAsync(ou)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    }
+                    @if (CanDeleteOU)
+                    {
+                        <button class="btn btn-icon" @onclick="() => OnDelete.InvokeAsync(ou)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    }
+                </div>
             </div>
         </div>
     </NodeTemplate>
 </DxTreeView>
+
+<style>
+    .organization-unit-tree {
+        padding: 1rem;
+    }
+
+    .node-wrapper {
+        margin: 0.25rem 0;
+    }
+
+    .node-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #f8f9fa;
+        padding: 0.5rem;
+        border-radius: 4px;
+        min-height: 45px;
+    }
+
+    .node-left {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .node-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .node-title {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .node-name {
+        font-weight: 500;
+        color: #212529;
+    }
+
+    .member-count {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .node-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-icon {
+        padding: 0.375rem;
+        border: none;
+        background: transparent;
+        color: #6c757d;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .btn-icon:hover {
+        background-color: rgba(0,0,0,0.05);
+        color: #212529;
+    }
+
+    :deep(.dxbl-treelist-node) {
+        margin-left: 2rem !important;
+    }
+
+    :deep(.dxbl-treelist-node:first-child) {
+        margin-top: 0.5rem;
+    }
+
+    :deep(.dxbl-treelist-node:last-child) {
+        margin-bottom: 0.5rem;
+    }
+
+    :deep(.dxbl-treelist-node-container) {
+        margin-left: 0 !important;
+    }
+</style>
 
 @code {
     [Parameter]
@@ -56,6 +154,7 @@
     [Parameter]
     public EventCallback<OrganizationUnitDto> OnDelete { get; set; }
 
+    public DxTreeView orgTreeView;
     private bool CanCreateOU { get; set; }
     private bool CanUpdateOU { get; set; }
     private bool CanDeleteOU { get; set; }
